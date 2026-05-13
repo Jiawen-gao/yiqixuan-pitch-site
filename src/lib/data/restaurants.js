@@ -14,7 +14,7 @@ export const restaurants = [
 			title: '火烧云在云南菜领域还是权威！',
 			author: '做一个饮食规律的人',
 			shares: 4312,
-			cover: `/notes/r1-cover.jpg`
+			cover: `${base}/notes/r1-cover.jpg`
 		}
 	},
 	{
@@ -29,7 +29,7 @@ export const restaurants = [
 			title: '据说是上海最好吃的西班牙餐厅 🇪🇸',
 			author: '不是翻车鱼',
 			shares: 935,
-			cover: `/notes/r2-cover.jpg`
+			cover: `${base}/notes/r2-cover.jpg`
 		}
 	},
 	{
@@ -44,7 +44,7 @@ export const restaurants = [
 			title: '牛 New 环球港新店！！蒸蚌！！！',
 			author: '仲夏之梦岳琳',
 			shares: 35,
-			cover: `/notes/r3-cover.jpg`
+			cover: `${base}/notes/r3-cover.jpg`
 		}
 	},
 	{
@@ -59,7 +59,7 @@ export const restaurants = [
 			title: '真·上海东北菜之光',
 			author: '好运多多歪女士',
 			shares: 16000,
-			cover: `/notes/r4-cover.jpg`
+			cover: `${base}/notes/r4-cover.jpg`
 		}
 	},
 	{
@@ -74,7 +74,7 @@ export const restaurants = [
 			title: '上海这家麻辣火锅真的好吃到流泪 😭',
 			author: '吴千语 Karena',
 			shares: 35,
-			cover: `/notes/r5-cover.jpg`
+			cover: `${base}/notes/r5-cover.jpg`
 		}
 	}
 ];
