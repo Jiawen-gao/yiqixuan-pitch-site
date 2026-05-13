@@ -1,17 +1,18 @@
 <script>
   import { onMount } from 'svelte';
+  import { base } from '$app/paths';
 
   // 聊天消息序列
   const messages = [
 	{ type: 'time',  text: '下午 3:47', delay: 200 },
 	{ type: 'text',  side: 'left',  text: '周六聚餐去哪？我找了四家餐厅，我没有偏好的，大家觉得不好就再找找', delay: 600 },
-	{ type: 'image', side: 'left',  img: '/note-1.png', delay: 1200 },
-	{ type: 'image', side: 'left',  img: '/note-2.png', delay: 1900 },
-	{ type: 'image', side: 'left',  img: '/note-3.png', delay: 2600 },
-	{ type: 'image', side: 'left',  img: '/note-4.png', delay: 3300 },
+	{ type: 'image', side: 'left',  img: `${base}/notes/note-1.png`, delay: 1200 },
+	{ type: 'image', side: 'left',  img: `${base}/notes/note-2.png`, delay: 1900 },
+	{ type: 'image', side: 'left',  img: `${base}/notes/note-3.png`, delay: 2600 },
+	{ type: 'image', side: 'left',  img: `${base}/notes/note-4.png`, delay: 3300 },
 	{ type: 'time',  text: '下午 4:00', delay: 4000 },
 	{ type: 'text',  side: 'right', text: '我也找了一家，大家一起看看', delay: 4500 },
-	{ type: 'image', side: 'right', img: '/note-5.png', delay: 5100 },
+	{ type: 'image', side: 'right', img: `${base}/notes/note-5.png`, delay: 5100 },
 	{ type: 'text',  side: 'left',  text: '我随便～', delay: 5900 },
 	{ type: 'text',  side: 'right', text: '我也行', delay: 6600 },
 	{ type: 'time',  text: '沉默了一下午', delay: 7400, muted: true },
