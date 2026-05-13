@@ -1,6 +1,7 @@
 <script>
 	import HeroSection from '$lib/components/sections/HeroSection.svelte';
 	import ProblemSection from '$lib/components/sections/ProblemSection.svelte';
+	import SolutionSection from '$lib/components/sections/SolutionSection.svelte';
 	import DemoSection from '$lib/components/sections/DemoSection.svelte';
 	import InsightSection from '$lib/components/sections/InsightSection.svelte';
 	import FutureSection from '$lib/components/sections/FutureSection.svelte';
@@ -17,6 +18,7 @@
 <div class="page">
 	<HeroSection />
 	<ProblemSection />
+	<SolutionSection />
 	<DemoSection />
 	<InsightSection />
 	<FutureSection />

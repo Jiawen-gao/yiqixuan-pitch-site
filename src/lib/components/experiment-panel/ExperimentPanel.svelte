@@ -1,81 +1,81 @@
 <script>
+	import { createEventDispatcher } from 'svelte';
+	import { scenarios } from '$lib/data/scenarios.js';
 	import ScenarioSwitcher from './ScenarioSwitcher.svelte';
 	import ParticipantGrid from './ParticipantGrid.svelte';
 
-	import { archetypes } from '$lib/data/archetypes';
+	const dispatch = createEventDispatcher();
 
-	export let scenarios = [];
-	export let currentScenario = 0;
-	export let onChangeScenario = () => {};
-	export let scenario;
+	let activeIdx = 0;
+	let selectedPersonId = scenarios[0].people[0].id;
+
+	$: activeScenario = scenarios[activeIdx];
+	$: selectedPerson = activeScenario.people.find((p) => p.id === selectedPersonId) ?? null;
+
+	// 把状态向上抛 —— 给右侧手机用
+	$: dispatch('change', { scenario: activeScenario, person: selectedPerson });
+
+	function handleSelectScenario(e) {
+		activeIdx = e.detail;
+		selectedPersonId = scenarios[0].people[0].id;
+	}
+
+	function handleSelectPerson(e) {
+		selectedPersonId = e.detail;
+	}
 </script>
 
-<div class="panel">
-	<p class="eyebrow">实验设定</p>
-	<h2>同一个决策板，在不同 8 人局里，会给出不同的共识结果。</h2>
-	<p class="intro">
-		我们用三种朋友约饭场景做对照实验。左侧切换局，右侧实时查看这个工具如何收集候选项、汇总偏好，并生成最终建议。
-	</p>
-
+<aside class="panel">
 	<ScenarioSwitcher
 		{scenarios}
-		{currentScenario}
-		{onChangeScenario}
+		{activeIdx}
+		on:select={handleSelectScenario}
 	/>
 
-	<div class="scenario-meta">
-		<h3>{scenario.name}</h3>
-		<p>{scenario.subtitle}</p>
-	</div>
+	<div class="divider"></div>
 
-	<ParticipantGrid members={scenario.members} {archetypes} />
-</div>
+	<ParticipantGrid
+		people={activeScenario.people}
+		selectedId={selectedPersonId}
+		on:select={handleSelectPerson}
+	/>
+
+	<div class="hint">
+		<span class="hint-dot"></span>
+		点头像，看 TA 在决策板上的真实表态
+	</div>
+</aside>
 
 <style>
 	.panel {
-		padding: 28px;
+		background: #FAF7EF;
+		border: 1px solid #E8E1CF;
 		border-radius: 28px;
-		background: rgba(255, 255, 255, 0.52);
-		border: 1px solid rgba(31, 27, 22, 0.08);
-		backdrop-filter: blur(12px);
+		padding: 32px 28px;
+		position: sticky;
+		top: 24px;
 	}
 
-	.eyebrow {
-		margin: 0 0 12px;
+	.divider {
+		height: 1px;
+		background: #E8E1CF;
+		margin: 24px 0;
+	}
+
+	.hint {
 		font-size: 12px;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		color: #8a7966;
+		color: #A89F8C;
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		padding-top: 4px;
 	}
 
-	h2 {
-		margin: 0 0 14px;
-		font-size: clamp(28px, 4vw, 44px);
-		line-height: 1.05;
-		letter-spacing: -0.03em;
-		max-width: 11ch;
-	}
-
-	.intro {
-		margin: 0 0 24px;
-		line-height: 1.75;
-		color: #5f5549;
-		max-width: 44ch;
-	}
-
-	.scenario-meta {
-		margin: 20px 0 18px;
-	}
-
-	.scenario-meta h3 {
-		margin: 0 0 6px;
-		font-size: 20px;
-	}
-
-	.scenario-meta p {
-		margin: 0;
-		font-size: 14px;
-		line-height: 1.6;
-		color: #6a5f53;
+	.hint-dot {
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: #A89F8C;
+		opacity: 0.6;
 	}
 </style>

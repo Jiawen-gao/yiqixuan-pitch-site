@@ -2,31 +2,39 @@
 	import ExperimentPanel from '$lib/components/experiment-panel/ExperimentPanel.svelte';
 	import PhoneDemo from '$lib/components/phone-demo/PhoneDemo.svelte';
 	import { scenarios } from '$lib/data/scenarios';
-	import { options } from '$lib/data/options';
-	import { computeConsensus } from '$lib/utils/computeConsensus';
 
-	let currentScenario = 0;
+	let activeScenario = scenarios[0];
+	let activePerson = null;
+	let phoneScreen = 0;
 
-	$: activeScenario = scenarios[currentScenario];
-	$: consensus = computeConsensus(activeScenario, options);
+	// ExperimentPanel 抛 'change'，payload = { scenario, person }
+	function handlePanelChange(e) {
+		const { scenario, person } = e.detail ?? {};
+
+		if (scenario) activeScenario = scenario;
+
+		// 点头像：联动跳回屏 1，看 TA 的真实表态
+		if (person && person !== activePerson) {
+			activePerson = person;
+			phoneScreen = 0;
+		} else if (!person) {
+			// 取消选中（换实验组时 selectedPersonId 被清空）→ 视角回到第一个人
+			activePerson = null;
+		}
+	}
 </script>
 
 <section class="demo-section" id="demo">
 	<div class="inner">
 		<div class="left">
-			<ExperimentPanel
-				scenarios={scenarios}
-				currentScenario={currentScenario}
-				onChangeScenario={(index) => (currentScenario = index)}
-				scenario={activeScenario}
-			/>
+			<ExperimentPanel on:change={handlePanelChange} />
 		</div>
 
 		<div class="right">
 			<PhoneDemo
+				person={activePerson}
 				scenario={activeScenario}
-				options={options}
-				consensus={consensus}
+				bind:screen={phoneScreen}
 			/>
 		</div>
 	</div>
@@ -34,11 +42,11 @@
 
 <style>
 	.demo-section {
-		padding: 88px 24px;
+		padding: clamp(48px, 8vw, 80px) clamp(16px, 4vw, 48px);
 	}
 
 	.inner {
-		max-width: 1320px;
+		max-width: 980px;
 		margin: 0 auto;
 		display: grid;
 		grid-template-columns: minmax(460px, 520px) minmax(420px, 1fr);

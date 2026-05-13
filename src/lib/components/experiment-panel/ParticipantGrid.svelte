@@ -1,120 +1,189 @@
 <script>
-	import { archetypes } from '$lib/data/archetypes';
+	import { createEventDispatcher } from 'svelte';
+	import { archetypes } from '$lib/data/archetypes.js';
 
-	export let members = [];
+	export let people = [];
+	export let selectedId = null;
 
-	function groupMembers(list) {
-		const groups = {
-			budget: [],
-			easygoing: [],
-			picky: [],
-			lowEnergy: []
-		};
+	const dispatch = createEventDispatcher();
 
-		for (const member of list) {
-			groups[member.archetype].push(member);
-		}
+	// 4 类按固定顺序：随和 → 算账 → 讲究 → 避雷
+	const order = ['easygoing', 'budget', 'picky', 'constraint'];
 
-		return Object.entries(groups).filter(([, value]) => value.length > 0);
+	$: sorted = [...people].sort(
+		(a, b) => order.indexOf(a.archetype) - order.indexOf(b.archetype)
+	);
+
+	const blockColor = {
+		easygoing:  '#D8D2C0',
+		budget:     '#E8B547',
+		picky:      '#B59CE0',
+		constraint: '#E08A8A'
+	};
+
+	function selectPerson(id) {
+		dispatch('select', selectedId === id ? null : id);
 	}
-
-	$: grouped = groupMembers(members);
 </script>
 
-<div class="groups">
-	{#each grouped as [key, people]}
-		<div class="group-card">
-			<div class="group-top">
-				<div>
-					<strong>{archetypes[key].label}</strong>
-					<p>{archetypes[key].tagline}</p>
-				</div>
-				<span>{people.length} 人</span>
-			</div>
+<div class="composition">
+	<div class="composition-header">
+		<span class="composition-label">人格配比</span>
+		<span class="composition-count">{sorted.length} 人</span>
+	</div>
 
-			<div class="avatars">
-				{#each people as person}
-					<div class="person">
-						<div class="avatar">{person.name.slice(0, 1)}</div>
-						<small>{person.name}</small>
-					</div>
-				{/each}
+	<div class="blocks">
+		{#each sorted as p (p.id)}
+			<div class="block" style="background:{blockColor[p.archetype]}"></div>
+		{/each}
+	</div>
+
+	<div class="legend">
+		{#each order as key}
+			<div class="legend-item">
+				<span class="legend-dot" style="background:{blockColor[key]}"></span>
+				{archetypes[key].label}
 			</div>
-		</div>
+		{/each}
+	</div>
+</div>
+
+<div class="people-grid">
+	{#each sorted as p (p.id)}
+		<button
+			type="button"
+			class="person"
+			class:active={selectedId === p.id}
+			on:click={() => selectPerson(p.id)}
+		>
+			<div class="avatar">
+				{p.avatar}
+				<span class="dot" style="background:{archetypes[p.archetype].color}"></span>
+			</div>
+			<div class="person-name">{p.name}</div>
+		</button>
 	{/each}
 </div>
 
 <style>
-	.groups {
-		display: grid;
-		gap: 12px;
+	.composition {
+		margin-bottom: 8px;
 	}
 
-	.group-card {
-		padding: 14px;
-		border-radius: 20px;
-		background: rgba(255, 255, 255, 0.78);
-		border: 1px solid rgba(31, 27, 22, 0.07);
-	}
-
-	.group-top {
+	.composition-header {
 		display: flex;
+		align-items: baseline;
 		justify-content: space-between;
-		align-items: flex-start;
-		gap: 10px;
+		margin-bottom: 14px;
+	}
+
+	.composition-label {
+		font-size: 12px;
+		color: #8B8472;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.composition-count {
+		font-size: 12px;
+		color: #8B8472;
+	}
+
+	.blocks {
+		display: grid;
+		grid-template-columns: repeat(8, 1fr);
+		gap: 4px;
 		margin-bottom: 12px;
 	}
 
-	.group-top strong {
-		display: block;
-		font-size: 14px;
-		margin-bottom: 2px;
+	.block {
+		height: 28px;
+		border-radius: 5px;
+		transition: background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 	}
 
-	.group-top p {
-		margin: 0;
-		font-size: 12px;
-		color: #6d6256;
-	}
-
-	.group-top span {
-		font-size: 12px;
-		font-weight: 700;
-		color: #2f2922;
-		background: #efe7db;
-		padding: 5px 8px;
-		border-radius: 999px;
-	}
-
-	.avatars {
+	.legend {
 		display: flex;
+		gap: 18px;
 		flex-wrap: wrap;
-		gap: 10px;
+		font-size: 12px;
+		color: #6B6452;
+		margin-bottom: 20px;
+	}
+
+	.legend-item {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+	}
+
+	.legend-dot {
+		width: 8px;
+		height: 8px;
+		border-radius: 2px;
+	}
+
+	.people-grid {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 14px 4px;
+		margin-bottom: 24px;
+		margin-top: 16px;
 	}
 
 	.person {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 6px;
-		width: 52px;
+		cursor: pointer;
+		padding: 6px 2px;
+		border-radius: 14px;
+		background: transparent;
+		border: none;
+		transition: background 0.2s ease;
+		font-family: inherit;
+	}
+
+	.person:hover {
+		background: #F1EAD7;
+	}
+
+	.person.active {
+		background: #ECE3C9;
 	}
 
 	.avatar {
-		width: 40px;
-		height: 40px;
-		border-radius: 999px;
-		display: grid;
-		place-items: center;
-		background: #efe7db;
-		font-size: 14px;
-		font-weight: 700;
+		width: 68px;
+		height: 68px;
+		border-radius: 50%;
+		background: #FFFFFF;
+		border: 2px solid #E8E1CF;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 32px;
+		position: relative;
+		margin-bottom: 10px;
+		transition: all 0.2s ease;
 	}
 
-	.person small {
-		font-size: 11px;
-		color: #574d42;
-		line-height: 1.2;
-		text-align: center;
+	.dot {
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		width: 16px;
+		height: 16px;
+		border-radius: 50%;
+		border: 3px solid #FAF7EF;
+	}
+
+	.person.active .avatar {
+		border-color: #1A1A1A;
+		transform: scale(1.05);
+	}
+
+	.person-name {
+		font-size: 13px;
+		color: #4B4538;
 	}
 </style>
