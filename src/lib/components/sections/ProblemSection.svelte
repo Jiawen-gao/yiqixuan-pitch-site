@@ -5,7 +5,7 @@
   // 聊天消息序列
   const messages = [
 	{ type: 'time',  text: '下午 3:47', delay: 200 },
-	{ type: 'text',  side: 'left',  text: '周六聚餐去哪？我找了四家餐厅，我没有偏好的，大家觉得不好就再找找', delay: 600 },
+	{ type: 'text',  side: 'left',  text: '我们明天剧本杀之前去哪吃？我找了四家餐厅，但我没有偏好的，大家觉得不好就再找找', delay: 600 },
 	{ type: 'image', side: 'left',  img: `${base}/notes/note-1.png`, delay: 1200 },
 	{ type: 'image', side: 'left',  img: `${base}/notes/note-2.png`, delay: 1900 },
 	{ type: 'image', side: 'left',  img: `${base}/notes/note-3.png`, delay: 2600 },
@@ -14,7 +14,7 @@
 	{ type: 'text',  side: 'right', text: '我也找了一家，大家一起看看', delay: 4500 },
 	{ type: 'image', side: 'right', img: `${base}/notes/note-5.png`, delay: 5100 },
 	{ type: 'text',  side: 'left',  text: '我随便～', delay: 5900 },
-	{ type: 'text',  side: 'right', text: '我也行', delay: 6600 },
+	{ type: 'text',  side: 'right', text: '我也都可以', delay: 6600 },
 	{ type: 'time',  text: '沉默了一下午', delay: 7400, muted: true },
 	{ type: 'time',  text: '下午 8:00', delay: 8000 },
 	{ type: 'text',  side: 'left',  text: '明天到底去哪里啊', delay: 8500 },
@@ -23,8 +23,12 @@
 
   let visible = [];
   let chatEl;
+  let sectionEl;
+  let started = false;
 
-  onMount(() => {
+  function startAnimation() {
+    if (started) return;
+    started = true;
     messages.forEach((_, i) => {
       setTimeout(() => {
         visible = [...visible, i];
@@ -34,10 +38,23 @@
         }, 50);
       }, messages[i].delay);
     });
+  }
+
+  onMount(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          startAnimation();
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.25 }
+    );
+    if (sectionEl) observer.observe(sectionEl);
   });
 </script>
 
-<section class="section" id="problem">
+<section class="section" id="problem" bind:this={sectionEl}>
   <div class="inner">
     <p class="label">问题</p>
     <h2>小红书解决了「发现好去处」，<br>却没有解决「和别人一起决定」。</h2>
@@ -81,7 +98,7 @@
         <div class="card">
           <div class="card-icon">📎</div>
           <h3>候选越来越多</h3>
-          <p>群里不断转笔记，选择看起来更多了，但决定反而更难了。</p>
+          <p>群里不断转发笔记，选择看起来更多了，但决定反而更难了。</p>
         </div>
         <div class="card">
           <div class="card-icon">🤐</div>
