@@ -12,7 +12,7 @@
   $: votes = person?.votes ?? {};
 
   // 为每家餐厅算「TA 选中的在前」的标签顺序
-  function tagsFor(restaurantId) {
+  function tagsFor(restaurantId, votesMap) {
     const vote = votes[restaurantId];
     const selected = new Set(vote?.tags ?? []);
     return [...concernTags].sort((a, b) => {
@@ -26,7 +26,7 @@
 <div class="grid">
   {#each restaurants as r (r.id)}
     {@const vote = votes[r.id] ?? { stance: null, tags: [] }}
-    {@const tagList = tagsFor(r.id)}
+    {@const tagList = tagsFor(r.id, votes)}
     <div class="card" data-r={r.id}>
       <div class="cover-wrap">
         <img class="cover" src={r.cover} alt={r.name} loading="lazy" />
