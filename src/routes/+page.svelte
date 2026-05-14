@@ -4,6 +4,7 @@
 	import SolutionSection from '$lib/components/sections/SolutionSection.svelte';
 	import DemoSection from '$lib/components/sections/DemoSection.svelte';
 	import AIInsightSection from '$lib/components/sections/AIInsightSection.svelte';
+	import VoiceSection from '$lib/components/sections/VoiceSection.svelte';
 	import ClosingSection from '$lib/components/sections/ClosingSection.svelte';
 </script>
 
@@ -21,6 +22,7 @@
 	<SolutionSection />
 	<DemoSection />
 	<AIInsightSection />
+	<VoiceSection />
 	<ClosingSection />
 </div>
 

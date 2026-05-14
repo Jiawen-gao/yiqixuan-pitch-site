@@ -11,6 +11,7 @@
       <a href="#solution">方案</a>
       <a href="#demo">实验</a>
       <a href="#ai-insight">AI</a>
+      <a href="#voice">48h后的新功能</a>
     </nav>
   </div>
 </section>
