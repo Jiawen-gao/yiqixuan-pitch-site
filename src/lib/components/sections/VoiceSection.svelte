@@ -88,7 +88,7 @@
 
     <div class="coda anim" style="--delay: 480ms;">
       <p class="coda-text">
-        这是 48 小时之外的想法，还没有实现。但我开始真的相信，这个产品可以<span class="grow">继续生长</span>。
+        这是48小时之外冒出来的想法，还没有实现，但忍不住写进来。
       </p>
     </div>
 
@@ -327,29 +327,7 @@
     margin-left: auto;
     margin-right: auto;
   }
-  .coda-text .grow {
-    position: relative;
-    color: #FF2442;
-    font-weight: 600;
-    display: inline-block;
-  }
-  .coda-text .grow::after {
-    content: '';
-    position: absolute;
-    left: 0; right: 0;
-    bottom: -2px;
-    height: 2px;
-    background: #FF2442;
-    border-radius: 2px;
-    opacity: 0;
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: opacity 0.4s ease 1.0s, transform 0.8s ease 1.0s;
-  }
-  .is-visible .coda-text .grow::after {
-    opacity: 0.55;
-    transform: scaleX(1);
-  }
+  
 
   /* 响应式 */
   @media (max-width: 760px) {
